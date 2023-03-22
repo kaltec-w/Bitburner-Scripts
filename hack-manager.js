@@ -92,7 +92,7 @@ async function little_prep(ns, hack_target, wt, gt, reserved_RAM) {
 				threads = weaken_threads;
 			}
 			if (threads >= 1) {
-				ns.exec('targeted-weaken.js', server, threads, threads, hack_target);
+				ns.exec('targeted-weaken.js', server, Math.floor(threads), Math.floor(threads), hack_target);
 				weaken_threads -= threads;
 				await ns.sleep(10);
 			}
@@ -108,7 +108,7 @@ async function little_prep(ns, hack_target, wt, gt, reserved_RAM) {
 				threads = grow_threads;
 			}
 			if (threads >= 1) {
-				ns.exec('targeted-grow.js', server, threads, threads, 0, hack_target);
+				ns.exec('targeted-grow.js', server, Math.floor(threads), Math.floor(threads), 0, hack_target);
 				grow_threads -= threads;
 				await ns.sleep(10);
 			}
@@ -181,7 +181,7 @@ async function little_hack(ns, hack_target, weaken_threads, grow_threads, hack_t
 					threads = weaken_threads;
 				}
 				if (threads >= 1) {
-					ns.exec('targeted-weaken.js', server, threads, threads, hack_target, n);
+					ns.exec('targeted-weaken.js', server, Math.floor(threads), Math.floor(threads), hack_target, n);
 					weaken_threads -= threads;
 					await ns.sleep(5);
 				}
@@ -197,7 +197,7 @@ async function little_hack(ns, hack_target, weaken_threads, grow_threads, hack_t
 					threads = grow_threads;
 				}
 				if (threads >= 1) {
-					ns.exec('targeted-grow.js', server, threads, threads, ns.getWeakenTime(hack_target) - ns.getGrowTime(hack_target) - 500, hack_target, n);
+					ns.exec('targeted-grow.js', server, Math.floor(threads), Math.floor(threads), ns.getWeakenTime(hack_target) - ns.getGrowTime(hack_target) - 500, hack_target, n);
 					grow_threads -= threads;
 					await ns.sleep(5);
 				}
@@ -213,7 +213,7 @@ async function little_hack(ns, hack_target, weaken_threads, grow_threads, hack_t
 					threads = hack_threads;
 				}
 				if (threads >= 1) {
-					ns.exec('targeted-hack.js', server, threads, threads, ns.getWeakenTime(hack_target) - ns.getHackTime(hack_target) + 500, hack_target, n, threads);
+					ns.exec('targeted-hack.js', server, Math.floor(threads), Math.floor(threads), ns.getWeakenTime(hack_target) - ns.getHackTime(hack_target) + 500, hack_target, n, threads);
 					hack_threads -= threads;
 					await ns.sleep(5);
 				}
@@ -311,13 +311,13 @@ export async function main(ns) {
 
 			if (prep) {
 				if (gt > 1) {
-					ns.exec('targeted-grow.js', prep_server, gt, gt, 0, little_target);
-					ns.exec('targeted-weaken.js', prep_server, wt, wt, little_target);
+					ns.exec('targeted-grow.js', prep_server, Math.floor(gt), Math.floor(gt), 0, little_target);
+					ns.exec('targeted-weaken.js', prep_server, Math.floor(wt), Math.floor(wt), little_target);
 					await ns.sleep(ns.getWeakenTime(little_target) + 1000);
 				}
 
 				else if (ns.getServerSecurityLevel(little_target) > ns.getServerMinSecurityLevel(little_target) * 1.5) {
-					ns.exec('targeted-weaken.js', prep_server, wt, wt, little_target);
+					ns.exec('targeted-weaken.js', prep_server, Math.floor(wt), Math.floor(wt), little_target);
 					await ns.sleep(ns.getWeakenTime(little_target) + 1000);
 				}
 			}
@@ -363,13 +363,13 @@ export async function main(ns) {
 
 			if (prep) {
 				if (gt > 1) {
-					ns.exec('targeted-grow.js', prep_server, gt, gt, 0, hack_target);
-					ns.exec('targeted-weaken.js', prep_server, wt, wt, hack_target);
+					ns.exec('targeted-grow.js', prep_server, Math.floor(gt), Math.floor(gt), 0, hack_target);
+					ns.exec('targeted-weaken.js', prep_server, Math.floor(wt), Math.floor(wt), hack_target);
 					await ns.sleep(ns.getWeakenTime(hack_target) + 1000);
 				}
 
 				else if (ns.getServerSecurityLevel(hack_target) > ns.getServerMinSecurityLevel(hack_target) * 1.5) {
-					ns.exec('targeted-weaken.js', prep_server, wt, wt, hack_target);
+					ns.exec('targeted-weaken.js', prep_server, Math.floor(wt), Math.floor(wt), hack_target);
 					await ns.sleep(ns.getWeakenTime(hack_target) + 1000);
 				}
 			}
@@ -418,16 +418,16 @@ export async function main(ns) {
 								await ns.sleep(10000);
 							}
 						}
-						ns.exec('targeted-weaken.js', host_servers[k], weaken_threads, weaken_threads, hack_target);
+						ns.exec('targeted-weaken.js', host_servers[k], Math.floor(weaken_threads), Math.floor(weaken_threads), hack_target);
 						await ns.sleep(weaken_time + 20);
 						i = 0;
 						initial_time = Date.now();
 						break
 					}
 
-					ns.exec('targeted-weaken.js', server, weaken_threads, weaken_threads, hack_target, n);
-					ns.exec('targeted-grow.js', server, grow_threads, grow_threads, grow_delay, hack_target, n);
-					ns.exec('targeted-hack.js', server, hack_threads, hack_threads, hack_delay, hack_target, n);
+					ns.exec('targeted-weaken.js', server, Math.floor(weaken_threads), Math.floor(weaken_threads), hack_target, n);
+					ns.exec('targeted-grow.js', server, Math.floor(grow_threads), Math.floor(grow_threads), grow_delay, hack_target, n);
+					ns.exec('targeted-hack.js', server, Math.floor(hack_threads), Math.floor(hack_threads), hack_delay, hack_target, n);
 					await ns.sleep(3);
 
 					n--;
